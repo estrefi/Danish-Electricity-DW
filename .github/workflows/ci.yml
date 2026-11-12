@@ -1,0 +1,19 @@
+name: ci
+
+on:
+  pull_request:          # run on every pull request
+  push:
+    branches: [main]     # and on every push to main
+
+jobs:
+  lint:                  # the job name: you'll use it in act and branch protection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4            # get your code onto the runner
+      - uses: actions/setup-python@v5        # install Python
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -e ".[dev]"         # install from pyproject.toml
+      - run: ruff check .                    # find code problems
+      - run: ruff format --check .           # check formatting
